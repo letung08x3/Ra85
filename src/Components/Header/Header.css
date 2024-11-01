@@ -1,0 +1,109 @@
+
+
+.header-top {
+    display: flex;
+    justify-content: space-between; /* Giãn các phần tử ra, tạo khoảng trống giữa chúng */
+    align-items: center;            /* Căn giữa các phần tử theo chiều dọc */
+    padding: 10px 0 0;
+}
+  
+  .header-logo img {
+    max-height: 50px;  /* Giới hạn chiều cao của logo */
+  }
+  
+  .input-search {
+    padding: 5px;
+    margin-right: 10px; /* Tạo khoảng cách giữa ô tìm kiếm và nút tìm kiếm */
+    border-radius: 10px;
+    width: 700px;
+    border: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);  /* Đổ bóng nhẹ */
+    outline: none; /* Loại bỏ viền mặc định khi input được chọn */
+    margin-left: 20px;
+  }
+  
+  .search {
+    padding: 5px 10px;
+    border: none;
+    background-color: white;
+  }
+  
+  .search-form {
+    display: flex;       /* Dàn ô tìm kiếm và nút tìm kiếm ra hàng ngang */
+    align-items: center; /* Căn giữa các phần tử trong form theo chiều dọc */
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .material-icons {
+    margin-right: 5px;  /* Tạo khoảng cách giữa icon và chữ */
+    margin-left: 10px;
+  }
+
+  
+  
+
+  .header-top div {
+    display: flex;
+    align-items: center;
+  }
+
+  .shopping-icon{
+    margin-left: 20px;
+    margin-right: 5px;
+}
+
+.header-main{
+    display: flex;
+    justify-content: space-between; 
+    height: 50px;
+    width: 100%;
+    background-color: #4de4ce ;
+    margin-top: 20px ;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+}
+  
+.header-main div {
+    display: flex;
+    padding: 10px;
+  }
+
+  .header-main ul {
+    list-style: none; /* Loại bỏ dấu chấm đầu dòng */
+    padding: 0;
+    margin: 0;
+    display: flex; /* Dàn các mục hàng ngang */
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-main li {
+    margin-right: 100px; /* Tạo khoảng cách giữa các mục */
+  }
+
+
+  .header-main li:last-child {
+    margin-right: 0; /* Xóa khoảng cách cho mục cuối cùng */
+  }
+  
+  .header-main a {
+    text-decoration: none;
+    color: #00483d; /* Màu chữ */
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-main ul li a span {
+    margin-top: 5px; /* Khoảng cách giữa icon và chữ */
+  }
+  
+  .header-main ul li a i img {
+    width: 24px;
+    height: 24px; /* Đảm bảo icon giữ kích thước cố định */
+    color: #faf7f7;
+  }
