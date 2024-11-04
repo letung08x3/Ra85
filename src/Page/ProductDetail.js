@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductById } from "../Components/API/ProductApi";
+import Slider from "react-slick";
 
-function ProductDetail(props) {
+function ProductDetail({ images }) {
   const [product, setProduct] = useState(null);
   const { id } = useParams(); // Lấy ID từ URL
 
   useEffect(() => {
-    // Gọi hàm API và cập nhật state khi component được render
+    // Gọi hàm API để lấy thông tin product theo id
     getProductById(id)
       .then((result) => {
         setProduct(result); // Cập nhật product với kết quả từ API
@@ -17,6 +18,25 @@ function ProductDetail(props) {
       });
   }, [id]);
 
+  // Hàm chọn ngẫu nhiên 3 ảnh
+  const getRandomImages = (images) => {
+    if (!images || images.length < 3) return [];
+    const shuffled = images.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+  };
+
+  const randomImages = getRandomImages(images);
+  // Cấu hình cho carousel
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 400,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  };
+
   console.log("Product Get By ID:", product);
 
   if (!product) {
@@ -25,11 +45,22 @@ function ProductDetail(props) {
   return (
     <div className="">
       <div className="w-full h-[50px] text-black bg-slate-100 uppercase font-bold text-2xl">
-        <p>{product.name}</p>
+        {product.name}
       </div>
       <div className="w-full flex ">
-        <div className="w-[55%]  bg-red-200">
-          <img src="#" class="img-responsive" alt="Ảnh sản phẩm" />
+        <div className="w-[55%]">
+          {/* Carousel chứa 3 ảnh ngẫu nhiên */}
+          <Slider {...settings} className="w-full">
+            {randomImages.map((img, index) => (
+              <div key={index} className="p-2">
+                <img
+                  src={img}
+                  alt={`Ảnh sản phẩm ${index + 1}`}
+                  className="w-[400px] h-[400px] object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
         <div className="w-[45%]  bg-slate-100">
           <div className="text-red-500 text-2xl font-bold text-center">

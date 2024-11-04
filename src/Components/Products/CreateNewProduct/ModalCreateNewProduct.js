@@ -46,7 +46,7 @@ function ModalCreateNewProduct({
       (item) => item.name === newProduct.categoryName
     );
     const newProductAPI = {
-      id: productUpdate ? productUpdate.id : undefined, // Thêm id khi cập nhật
+      ...(productUpdate && { id: productUpdate.id }), // Thêm id khi cập nhật
       name: newProduct.name,
       price: newProduct.price,
       info: newProduct.info,
@@ -59,6 +59,7 @@ function ModalCreateNewProduct({
 
     if (productUpdate) {
       updateProduct(newProductAPI); // Cập nhật sản phẩm
+      console.log("Id ở th cập nhật:", newProductAPI.id);
     } else {
       CreateNewProduct(newProductAPI); // Tạo sản phẩm mới
     }

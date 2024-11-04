@@ -1,11 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
-function ProductCard({ productList }) {
+function ProductCard({
+  productList,
+  images,
+  page,
+  setPage,
+  setTotalPages,
+  totalPages,
+  keyWord,
+  setKeyWord,
+}) {
   const navigate = useNavigate();
 
   const onHandleClickCard = (productId) => {
     navigate(`/products/${productId}`);
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
   };
 
   return (
@@ -14,6 +28,8 @@ function ProductCard({ productList }) {
         .slice()
         .sort((a, b) => b.id - a.id)
         .map((item, index) => {
+          const randomImage = images[Math.floor(Math.random() * images.length)];
+
           return (
             <div
               className="border rounded-lg shadow-lg overflow-hidden bg-white transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
@@ -22,7 +38,7 @@ function ProductCard({ productList }) {
             >
               <div className="p-4">
                 <img
-                  src={`${process.env.PUBLIC_URL}/Images/image${index + 1}.jpg`}
+                  src={randomImage}
                   alt={item.name}
                   className="w-full h-48 object-cover"
                 />
@@ -55,6 +71,35 @@ function ProductCard({ productList }) {
             </div>
           );
         })}
+      <div className="mt-4">
+        <Pagination aria-label="Page navigation example">
+          <PaginationItem disabled={page === 0}>
+            <PaginationLink first onClick={() => handlePageClick(0)} />
+          </PaginationItem>
+          <PaginationItem disabled={page === 0}>
+            <PaginationLink
+              previous
+              onClick={() => handlePageClick(page - 1)}
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem active={page === index + 1} key={index}>
+              <PaginationLink onClick={() => handlePageClick(index + 1)}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem disabled={page === totalPages - 1}>
+            <PaginationLink next onClick={() => handlePageClick(page + 1)} />
+          </PaginationItem>
+          <PaginationItem disabled={page === totalPages - 1}>
+            <PaginationLink
+              last
+              onClick={() => handlePageClick(totalPages - 1)}
+            />
+          </PaginationItem>
+        </Pagination>
+      </div>
     </div>
   );
 }

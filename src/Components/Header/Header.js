@@ -1,24 +1,45 @@
 import React from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function Header(props) {
+function Header({ keyWord, setKeyWord, searchProducts }) {
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault(); // Ngăn form submit lại trang
+    const searchInput = document.getElementById("search-input").value;
+
+    searchProducts(searchInput);
+
+    navigate("/products/search-result"); // Điều hướng đến trang kết quả
+  };
+
+  const handleClickLogo = () => {
+    setKeyWord("");
+  };
+
   return (
     <div className="header">
       <div className="header-top">
         <div>
-          <Link to={"/products"} className="header-logo">
+          <Link
+            to={"/products"}
+            className="header-logo"
+            onClick={handleClickLogo}
+          >
             <img
               src="https://hoanghamobile.com/Content/web/img/logo-text.png"
               alt="Logo"
             />
           </Link>
-          <form action="/tim-kiem" className="search-form">
+          <form onSubmit={handleSearch} className="search-form">
             <input
+              id="search-input"
               type="text"
               placeholder="Bạn muốn tìm gì?"
               className="input-search"
               maxLength={100}
+              defaultValue={keyWord} // Hiển thị từ khóa hiện tại
             />
             <button type="submit" className="search">
               <i className="fas fa-search"></i>
@@ -26,13 +47,13 @@ function Header(props) {
           </form>
           <div>
             <Link to={"/admin"} className="login">
-              <i class="material-icons"></i>
+              <i className="material-icons"></i>
               Admin
             </Link>
           </div>
           <div>
             <a href="/">
-              <i class="fa fa-shopping-cart shopping-icon"></i>
+              <i className="fa fa-shopping-cart shopping-icon"></i>
               Giỏ hàng
             </a>
           </div>
