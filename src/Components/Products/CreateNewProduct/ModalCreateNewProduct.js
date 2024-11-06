@@ -27,6 +27,9 @@ function ModalCreateNewProduct({
   updateProduct,
   setProductUpdate,
 }) {
+  console.log("Ds nhà sx là:", manufacturerList);
+  console.log("Ds category là:", categoryList);
+
   // Cập nhật newProduct khi modal được mở
   useEffect(() => {
     if (productUpdate && showModal) {

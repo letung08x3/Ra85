@@ -5,7 +5,7 @@ import Banner from "./Components/Banner/Banner";
 import Header from "./Components/Header/Header";
 import ProductDetail from "./Page/ProductDetail";
 import ProductPage from "./Page/ProductPage";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   createNewProductAPI,
   deleteProductById,
@@ -27,6 +27,7 @@ import image9 from "./Images/image9.jpg";
 import image10 from "./Images/image10.jpg";
 import image11 from "./Images/image11.jpg";
 import Login from "./Components/Login/Login";
+import { axiosClient } from "./Components/API/api";
 
 const images = [
   image1,
@@ -49,6 +50,10 @@ function App() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [keyWord, setKeyWord] = useState("");
+  const [userName, setUserName] = useState("");
+  const [passWord, setPassWord] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -61,23 +66,104 @@ function App() {
     categoryName: "",
   });
 
-  const fetchProducts = () => {
-    getListProduct(page, keyWord).then((res) => {
-      console.log("Page được gọi đến là: ", page);
-
-      setProductList(res.content);
-      setTotalPages(res.totalPages);
-    });
+  // hàm mã hóa thông tin đăng nhập cho Basic Auth
+  const encodeCredentials = (username, password) => {
+    return btoa(`${username}:${password}`);
   };
 
-  const fetchManufacture = () => {
-    getListManufacturer().then((res) => {
+  // Hàm xác thực người dùng
+  const handleLogin = async (userName, passWord) => {
+    // console.log("đã qua bước 2");
+
+    try {
+      // Mã hóa thông tin đăng nhập và thêm vào header `Authorization`
+      const encodedCredentials = encodeCredentials(userName, passWord);
+      console.log("encodedCredentials:", encodedCredentials);
+
+      // console.log("đã qua bước 3");
+
+      const response = await axiosClient.get("login/", {
+        headers: {
+          Authorization: `Basic ${encodedCredentials}`,
+        },
+      });
+      // console.log("đã qua bước 4");
+
+      console.log("Login successful:", response.data);
+
+      // Lưu token và cập nhật trạng thái nếu đăng nhập thành công
+      let token = encodedCredentials;
+      setIsAuthenticated(true);
+
+      localStorage.setItem("token", token);
+      navigate("products/");
+      return response.data;
+    } catch (error) {
+      alert("Username hoặc password chưa đúng, mời nhập lại!");
+      setIsAuthenticated(false);
+      // throw error;
+    }
+  };
+  console.log(
+    "trạng thái authen sau khi chạy xog hàm login là:",
+    isAuthenticated
+  );
+
+  useEffect(() => {
+    console.log("đã chạy qua đoạn code này");
+
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    // console.log("chương trình chạy vào đây");
+
+    const fetchData = async () => {
+      console.log("trạng thái authen là:", isAuthenticated);
+
+      if (isAuthenticated) {
+        try {
+          await Promise.all([
+            console.log("lấy danh sách nhà sx"),
+
+            fetchManufacture(),
+            console.log("lấy danh sách category"),
+
+            fetchCategory(),
+            console.log("lấy danh sách sp"),
+
+            fetchProducts(),
+          ]);
+        } catch (error) {
+          console.error("Có lỗi khi fetch dữ liệu:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [isAuthenticated, page, keyWord]);
+
+  const fetchProducts = async () => {
+    const res = await getListProduct(page, keyWord);
+    console.log("Page được gọi đến là: ", page);
+    setProductList(res.content);
+    setTotalPages(res.totalPages);
+  };
+
+  const fetchManufacture = async () => {
+    await getListManufacturer().then((res) => {
+      console.log("kết quả api Manufac res =", res);
+
       setManufactureList(res);
     });
   };
 
-  const fetchCategory = () => {
-    getListCategory().then((res) => {
+  const fetchCategory = async () => {
+    await getListCategory().then((res) => {
+      console.log("kết quả api Category là", res);
+
       setCategoryList(res);
     });
   };
@@ -86,10 +172,10 @@ function App() {
     setKeyWord(keyWord);
   };
 
-  const CreateNewProduct = (newProductAPI) => {
+  const CreateNewProduct = async (newProductAPI) => {
     console.log("NewProductAPI ở App.js:", newProductAPI);
 
-    createNewProductAPI(newProductAPI).then((res) => {
+    await createNewProductAPI(newProductAPI).then((res) => {
       fetchProducts(res);
     });
     fetchProducts();
@@ -123,24 +209,36 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetchManufacture();
-    fetchCategory();
-    fetchProducts();
-    console.log("Cập nhật lại danh sách khi page thay đổi:", page);
-  }, [page, keyWord]);
+  // Hàm đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
   return (
     <div className="w-[85%] m-auto">
       <Header
         keyWord={keyWord}
         setKeyWord={setKeyWord}
         searchProducts={searchProducts}
+        handleLogout={handleLogout}
       />
       <Banner />
 
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <Login
+              userName={userName}
+              passWord={passWord}
+              setUserName={setUserName}
+              setPassWord={setPassWord}
+              setIsAuthenticated={setIsAuthenticated}
+              handleLogin={handleLogin}
+            />
+          }
+        />
         <Route
           path="/products"
           element={

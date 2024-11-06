@@ -19,6 +19,8 @@ function Admin({
   page,
   setPage,
 }) {
+  console.log("Ds nhà sx ở Admin là:", manufacturerList);
+
   const [showModal, setShowModal] = useState(false);
 
   const onHandleOpenModal = () => {

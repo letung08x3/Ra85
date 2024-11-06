@@ -2,7 +2,7 @@ import React from "react";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 
-function Header({ keyWord, setKeyWord, searchProducts }) {
+function Header({ keyWord, setKeyWord, searchProducts, handleLogout }) {
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -17,6 +17,7 @@ function Header({ keyWord, setKeyWord, searchProducts }) {
   const handleClickLogo = () => {
     setKeyWord("");
   };
+  const token = localStorage.getItem("token");
 
   return (
     <div className="header">
@@ -46,10 +47,25 @@ function Header({ keyWord, setKeyWord, searchProducts }) {
             </button>
           </form>
           <div>
-            <Link to={"/admin"} className="login">
-              <i className="material-icons"></i>
-              Admin
-            </Link>
+            {token ? (
+              <>
+                <Link to={"/admin"}>
+                  <button className="bg-teal-500 rounded-md w-[70px] h-7 ">
+                    Admin
+                  </button>
+                </Link>
+                {/* <Link to={"/login"}> */}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-400 ml-3 rounded-md h-7 w-[80px] text-white"
+                >
+                  Đăng xuất
+                </button>
+                {/* </Link> */}
+              </>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
             <a href="/">

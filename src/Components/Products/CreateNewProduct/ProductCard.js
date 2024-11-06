@@ -2,16 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
-function ProductCard({
-  productList,
-  images,
-  page,
-  setPage,
-  setTotalPages,
-  totalPages,
-  keyWord,
-  setKeyWord,
-}) {
+function ProductCard({ productList, images, page, setPage, totalPages }) {
   const navigate = useNavigate();
 
   const onHandleClickCard = (productId) => {

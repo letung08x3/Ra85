@@ -1,19 +1,14 @@
-import React, { useState } from "react";
-import { handleLogin } from "../API/ProductApi";
-import { useNavigate } from "react-router-dom";
-
-function Login(props) {
-  const [userName, setUserName] = useState();
-  const [passWord, setPassWord] = useState();
-  const navigate = useNavigate();
-
+import React from "react";
+function Login({ userName, passWord, setPassWord, setUserName, handleLogin }) {
   const onHandleSubmit = (e) => {
     e.preventDefault();
 
     console.log("username người dùng nhập là:", userName);
     console.log("password người dùng nhập là:", passWord);
+
+    console.log("đã qua bước 1");
+
     handleLogin(userName, passWord);
-    navigate("/products");
   };
   return (
     <div>
@@ -26,7 +21,7 @@ function Login(props) {
             </h2>
             <p class="text-gray-600 mb-6 text-center">Have a nice day!</p>
 
-            <form onSubmit={onHandleSubmit}>
+            <form>
               <div class="mb-4">
                 <label class="block text-gray-700">
                   <span class="sr-only">Username</span>
@@ -39,6 +34,8 @@ function Login(props) {
                       placeholder="Username"
                       class="w-full focus:outline-none"
                       onChange={(e) => setUserName(e.target.value)} // Cập nhật userName
+                      required
+                      value={userName}
                     />
                   </div>
                 </label>
@@ -55,15 +52,18 @@ function Login(props) {
                       type="password"
                       placeholder="Password"
                       class="w-full focus:outline-none"
-                      onChange={(e) => setPassWord(e.target.value)} // Cập nhật userName
+                      onChange={(e) => setPassWord(e.target.value)} // Cập nhật passWord
+                      required
+                      value={passWord}
                     />
                   </div>
                 </label>
               </div>
 
               <button
-                type="submit"
+                type="button"
                 class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg shadow mt-4"
+                onClick={onHandleSubmit}
               >
                 Login Now
               </button>

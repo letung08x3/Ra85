@@ -1,44 +1,31 @@
 import { api } from "./api";
+// import { checkAuth } from "./api";
 
-let getListProduct = (page = 1, keyWord = "") => {
-  // Nếu có từ khóa tìm kiếm, thêm query parameter `search` vào URL
+let getListProduct = async (page = 1, keyWord = "") => {
   let url = keyWord
     ? `products?page=${page}&search=${keyWord}`
     : `products?page=${page}`;
-  return api("GET", url, null);
+  return await api("GET", url, null);
 };
 
-let createNewProductAPI = (newProduct) => {
-  return api("POST", "products/", newProduct);
+let createNewProductAPI = async (newProduct) => {
+  const url = "products/";
+  return await api("POST", url, newProduct);
 };
 
-let getProductById = (id) => {
+let getProductById = async (id) => {
   let url = `products/${id}`;
-  return api("GET", url, null);
+  return await api("GET", url, null);
 };
 
-let deleteProductById = (id) => {
+let deleteProductById = async (id) => {
   let url = `products/${id}`;
-  return api("DELETE", url, null);
+  return await api("DELETE", url, null);
 };
 
-let updateProductAPI = (productUpdate) => {
+let updateProductAPI = async (productUpdate) => {
   let url = `products/${productUpdate.id}`;
-
-  return api("PUT", url, productUpdate);
-};
-
-let handleLogin = (userName, passWord) => {
-  const loginData = { userName, passWord };
-  return api("POST", "login", loginData)
-    .then((response) => {
-      console.log("Login successful:", response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("Login failed:", error);
-      throw error;
-    });
+  return await api("PUT", url, productUpdate);
 };
 
 export {
@@ -47,5 +34,4 @@ export {
   getProductById,
   deleteProductById,
   updateProductAPI,
-  handleLogin,
 };
